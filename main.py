@@ -1,5 +1,6 @@
 from biblical_corpus import BiblicalCorpus
 from text_vectorizer import TextVectorizer
+from visualizador import Visualizador
 
 if __name__ == "__main__":
     corpus = BiblicalCorpus('t_kjv.csv')
@@ -11,3 +12,12 @@ if __name__ == "__main__":
     matriz_tfidf = vectorizador.transformar_tfidf(df['Tokens'])
 
     print(f"Dimensiones de la matriz: {matriz_tfidf.shape}")
+    print("\nGenerando visualizaciones exploratorias...")
+    vis = Visualizador(corpus, matriz_tfidf)
+    
+    print("Mostrando estadísticas básicas (Cierra la ventana para continuar)")
+    vis.graficar_estadisticas_basicas()
+    
+    print("Mostrando heatmap de similitud")
+    vis.graficar_heatmap_similitud(vectorizador)
+    print("\nFUNCIONAA")
