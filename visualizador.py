@@ -55,7 +55,7 @@ class Visualizador:
         matriz_similitud = SimilitudCoseno.matriz_similitud(matriz_tfidf_libros)
 
         plt.figure(figsize=(12, 10))
-        sns.heatmap(matriz_similitud, xticklabels=nombres_libros, yticklabels=nombres_libros, cmap='rainbow')
+        sns.heatmap(matriz_similitud, xticklabels=nombres_libros, yticklabels=nombres_libros, cmap='plasma')
         plt.title('Matriz de Similitud del Coseno entre Libros de la Biblia')
         plt.xlabel('Libros')
         plt.ylabel('Libros')
