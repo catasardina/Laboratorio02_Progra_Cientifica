@@ -4,7 +4,7 @@ Proyecto de análisis computacional sobre el corpus bíblico utilizando técnica
 
 ## Integrantes
 * Marianela Díaz Rodríguez
-* Inti Santibañez
+* Inti Santibáñez
 
 ## Requisitos de Datos
 Para que el sistema funcione correctamente, debes colocar los siguientes archivos CSV en la carpeta raíz del proyecto:
