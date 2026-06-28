@@ -3,6 +3,9 @@ from preprocesador import PreprocesadorTexto
 from tfidf import TfIdf
 from similitud import SimilitudCoseno
 from visualizador import Visualizador
+from pca_viz import VisualizadorPCA
+from clasificador import ClasificadorBiblico
+from sentimiento import AnalizadorSentimiento
 
 if __name__ == "__main__":
     corpus = CorpusBiblico('t_kjv.csv', 'key_english.csv')
@@ -18,30 +21,32 @@ if __name__ == "__main__":
     df_tfidf = tfidf.transformar(textos_tokenizados)
     matriz_vectores = df_tfidf.values.tolist()
 
+    print("Generando visualizaciones...")
     vis = Visualizador(versiculos, textos_tokenizados)
     vis.graficar_estadisticas_basicas()
     vis.graficar_heatmap_similitud(tfidf)
+    
+    pca = VisualizadorPCA(matriz_vectores, versiculos)
+    pca.graficar()
+
+    print("Entrenando clasificador...")
+    nombres_libros = [v.nombre_libro for v in versiculos]
+    clasificador = ClasificadorBiblico(matriz_vectores, nombres_libros)
+    clasificador.entrenar()
+    print("Matriz de confusion:", clasificador.evaluar())
+
+    print("\nEjemplo de sentimiento en primer versiculo:", 
+          AnalizadorSentimiento.analizar(textos_crudos[0]))
 
     while True:
-        consulta = input("\nIngresa tu busqueda (o 'salir' para terminar): ")
-        if consulta.lower() == 'salir':
-            break
-            
+        consulta = input("\nIngresa tu busqueda (o 'salir'): ")
+        if consulta.lower() == 'salir': break
+        
         tokens_consulta = preprocesador.preprocesar(consulta)
-        if not tokens_consulta:
-            print("Consulta no valida o solo contiene palabras vacias.")
-            continue
-            
         vector_consulta = tfidf.transformar_uno(tokens_consulta)
         puntajes = SimilitudCoseno.similitud_contra_matriz(vector_consulta, matriz_vectores)
-        mejores_resultados = SimilitudCoseno.top_k(puntajes, 5)
-
-        hay_resultados = False
-        for indice, puntaje in mejores_resultados:
+        
+        for indice, puntaje in SimilitudCoseno.top_k(puntajes, 3):
             if puntaje > 0:
-                hay_resultados = True
                 v = versiculos[indice]
                 print(f"[{puntaje:.4f}] {v.nombre_libro} {v.capitulo}:{v.numero_versiculo} -> {v.texto}")
-        
-        if not hay_resultados:
-            print("No se encontraron coincidencias para tu busqueda.")
