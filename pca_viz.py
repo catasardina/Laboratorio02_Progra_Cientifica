@@ -13,7 +13,7 @@ class VisualizadorPCA:
 
         plt.figure(figsize=(10, 7))
         plt.scatter(componentes[:, 0], componentes[:, 1], c=colores, alpha=0.5, s=10)
-        plt.title('PCA: Distribución de Versículos (Cian=Antiguo, Magenta=Nuevo)')
+        plt.title('PCA: Distribución de Versículos (Verde=Antiguo, Magenta=Nuevo)')
         plt.xlabel('Componente Principal 1')
         plt.ylabel('Componente Principal 2')
         plt.show()
