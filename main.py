@@ -6,6 +6,8 @@ from visualizador import Visualizador
 from pca_viz import VisualizadorPCA
 from clasificador import ClasificadorBiblico
 from sentimiento import AnalizadorSentimiento
+from generador_texto import GeneradorTexto
+import random
 
 if __name__ == "__main__":
     corpus = CorpusBiblico('t_kjv.csv', 'key_english.csv')
@@ -29,15 +31,25 @@ if __name__ == "__main__":
     pca = VisualizadorPCA(matriz_vectores, versiculos)
     pca.graficar()
 
-    print("Entrenando clasificador...")
+    print("\nConstruyendo modelos de generación de texto...")
+    generador = GeneradorTexto(textos_tokenizados)
+    print("\n--- Ejemplos de Texto Generado ---")
+    print("Unigrama:", generador.generar_unigrama())
+    print("Bigrama:", generador.generar_bigrama())
+    print("Trigrama:", generador.generar_trigrama(palabra1='in'))
+    print("----------------------------------\n")
+
+    print("Generando gráfico de evolución de sentimiento...")
+    AnalizadorSentimiento.graficar_evolucion_por_libro(versiculos)
+
+    print("\nEntrenando clasificador...")
     nombres_libros = [v.nombre_libro for v in versiculos]
     clasificador = ClasificadorBiblico(matriz_vectores, nombres_libros)
     clasificador.entrenar()
-    print("Matriz de confusion:", clasificador.evaluar())
+    print("Matriz de confusion:\n", clasificador.evaluar())
 
     print("\nEjemplo de sentimiento en primer versiculo:", 
           AnalizadorSentimiento.analizar(textos_crudos[0]))
-
     while True:
         consulta = input("\nIngresa tu busqueda (o 'salir'): ")
         if consulta.lower() == 'salir': break
